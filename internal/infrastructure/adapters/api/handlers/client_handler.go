@@ -79,7 +79,8 @@ func (h *ClientHandler) GetClientData(c *gin.Context) {
 			if header == "Fecha" {
 				fechaLimpia := strings.ReplaceAll(value, "\\", "")
 				if t, err := time.Parse("2006-01-02 15:04:05", fechaLimpia); err == nil {
-					entry[header] = t.Unix()
+					// Convierte la fecha al formato ISO 8601
+					entry[header] = t.Format("2006-01-02T15:04:05")
 				} else {
 					log.Printf("Error parsing fecha: '%s', error: %v", value, err)
 					entry[header] = nil
