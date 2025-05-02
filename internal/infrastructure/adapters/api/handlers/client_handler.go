@@ -3,6 +3,7 @@ package handlers
 import (
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -12,7 +13,6 @@ import (
 
 type ClientDataRequest struct {
 	ClientName string `json:"client_name"`
-	Variable   string `json:"variable"` // "Volumen", "Presion", "Temperatura"
 }
 
 type ClientHandler struct {
@@ -35,70 +35,68 @@ func (h *ClientHandler) GetClientNames(c *gin.Context) {
 }
 
 func (h *ClientHandler) GetClientData(c *gin.Context) {
-	var request ClientDataRequest
+	var request struct {
+		ClientName string `json:"client_name"`
+	}
+
+	// Lee el cuerpo JSON de la solicitud
 	if err := c.ShouldBindJSON(&request); err != nil {
+		log.Printf("Error parsing request body: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
 
 	clientName := request.ClientName
-	variable := request.Variable
+	log.Printf("Client name: %s", clientName)
 
+	// Obtén los datos de la hoja correspondiente al cliente
 	rawData, err := h.apiService.GetClientRawData(clientName)
 	if err != nil {
+		log.Printf("Error fetching raw data: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	if len(rawData) < 2 {
+		log.Printf("Not enough data: %v", rawData)
 		c.JSON(http.StatusNotFound, gin.H{"error": "No data found"})
 		return
 	}
 
 	headers := rawData[0]
-	fechaIndex := -1
-	variableIndex := -1
-
-	for i, h := range headers {
-		if h == "Fecha" {
-			fechaIndex = i
-		}
-		if h == variable {
-			variableIndex = i
-		}
-	}
-
-	if fechaIndex == -1 || variableIndex == -1 {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Required columns not found"})
-		return
-	}
+	log.Printf("Headers: %v", headers)
 
 	responseData := []map[string]interface{}{}
 	for _, row := range rawData[1:] {
-		if len(row) <= variableIndex || len(row) <= fechaIndex {
+		if len(row) != len(headers) {
+			log.Printf("Skipping inconsistent row: %v", row)
 			continue
 		}
-		fechaOriginal := row[fechaIndex]
-		var timestamp int64 = 0
 
-		// Limpia los caracteres de escape de la fecha
-		fechaLimpia := strings.ReplaceAll(fechaOriginal, "\\", "")
-
-		// Intenta parsear la fecha con el formato esperado
-		if t, err := time.Parse("2006-01-02 15:04:05", fechaLimpia); err == nil {
-			timestamp = t.Unix()
-			log.Printf("Fecha parseada correctamente: timestamp = %d", timestamp)
-		} else {
-			log.Printf("Error parsing fecha: '%s', error: %v", fechaOriginal, err)
-			timestamp = 0 // O algún valor por defecto
-		}
-
-		entry := map[string]interface{}{
-			"Fecha":  timestamp,
-			variable: row[variableIndex],
+		entry := map[string]interface{}{}
+		for i, header := range headers {
+			value := row[i]
+			if header == "Fecha" {
+				fechaLimpia := strings.ReplaceAll(value, "\\", "")
+				if t, err := time.Parse("2006-01-02 15:04:05", fechaLimpia); err == nil {
+					entry[header] = t.Unix()
+				} else {
+					log.Printf("Error parsing fecha: '%s', error: %v", value, err)
+					entry[header] = nil
+				}
+			} else {
+				valorLimpio := strings.ReplaceAll(value, ",", ".")
+				if num, err := strconv.ParseFloat(valorLimpio, 64); err == nil {
+					entry[header] = num
+				} else {
+					log.Printf("Error parsing numeric value: '%s', error: %v", value, err)
+					entry[header] = nil
+				}
+			}
 		}
 		responseData = append(responseData, entry)
 	}
 
+	log.Printf("Response data: %v", responseData)
 	c.JSON(http.StatusOK, responseData)
 }
