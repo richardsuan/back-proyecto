@@ -1,0 +1,155 @@
+/* Encabezado */
+.header {
+    background-color: #004080;
+    padding: 10px;
+}
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.header-title {
+    color: white;
+    margin: 0;
+    font-size: 26px;
+}
+.header-button {
+    background-color: white;
+    color: #004080;
+    font-weight: bold;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Cuerpo Principal */
+.main-body {
+    display: flex;
+}
+.left-column {
+    width: 20%;
+    padding: 10px;
+}
+.right-column {
+    width: 80%;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+}
+.main-graph-section {
+    flex: 1;
+    margin-bottom: 20px;
+}
+.main-graph {
+    height: 400px;
+}
+.bottom-section {
+    display: flex;
+    padding-top: 10px;
+}
+.variables-section, .summary-section {
+    width: 50%;
+}
+.variables-section {
+    padding-right: 10px;
+}
+.summary-section {
+    padding-left: 10px;
+}
+
+.custom-tabs {
+    margin-top: 10px;
+    max-width: 400px;
+
+    font-size: 12px;
+    text-align: center;
+    align-items: center;
+}
+
+.custom-tab {
+    color: #1e88e5 !important; /* Texto azul para no seleccionado */
+    border: 2px solid #1e88e5 !important; /* Borde azul para no seleccionado */
+    border-radius: 8px;
+    padding: 8px 10px !important;
+    margin-right: 10px;
+    background-color: white !important; /* Fondo blanco para no seleccionado */
+    font-weight: bold;
+    display: inline-block;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.custom-tab:hover {
+    background-color: #cfcfcf; /* Un azul claro al pasar el ratón */
+    cursor: pointer;
+}
+
+.custom-tabs .custom-tab--selected { /* Estilo para la pestaña seleccionada */
+    background-color: #1e88e5 !important;
+    color: white !important;
+    border: 2px solid #1e88e5 !important;
+}
+.DateRangePicker_picker {
+    top: 100px !important; /* Ajusta este valor para mover el calendario más abajo */
+}
+
+
+/* Contenedor para los selectores de ejes */
+.axis-selectors {
+    display: flex; /* Usar diseño flexbox para colocar los elementos lado a lado */
+    gap: 20px; /* Espaciado entre los selectores */
+    align-items: center; /* Alinear verticalmente los elementos */
+    margin-bottom: 20px; /* Espaciado inferior para separar de la gráfica */
+}
+
+/* Estilo individual para cada selector */
+.axis-selector {
+    flex: 1; /* Hacer que los selectores ocupen el mismo espacio */
+    min-width: 200px; /* Ancho mínimo para los selectores */
+}
+
+/* Título de la sección */
+.section-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de los inputs */
+.input-container {
+    margin-top: 20px;
+}
+
+/* Estilo para los labels */
+.input-label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+/* Estilo para los inputs */
+.input-field {
+    width: 50%;
+    padding: 5px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Estilo para el botón */
+.action-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #1e88e5;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    max-width: 200px;
+}
+
+.action-button:hover {
+    background-color: #1565c0;
+}
