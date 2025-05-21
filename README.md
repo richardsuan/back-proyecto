@@ -17,7 +17,7 @@ wget https://go.dev/dl/go1.22.2.linux-amd64.tar.gz
 sudo rm -rf /usr/local/go
 
 # Extraer Go en /usr/local
-sudo tar -C /usr/local -xzf go1.22.2.linux-amd64.tar.gz
+wget https://go.dev/dl/go1.23.0.linux-amd64.tar.gz
 
 # Configurar variables de entorno (agrega esto en ~/.bashrc o ~/.zshrc)
 echo 'export PATH=$PATH:/usr/local/go/bin' >> ~/.bashrc
@@ -115,6 +115,7 @@ Esto descargará automáticamente las dependencias como:
 ▶️ Ejecución
 
 go run main.go
+pyhon3 predict.py
 
 El servidor quedará corriendo en:
 

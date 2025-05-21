@@ -11,12 +11,14 @@ type GinAdapter struct {
 	apiService driver.APIService
 }
 
-func NewGinAdapter(apiService driver.APIService) *GinAdapter {
+func NewGinAdapter(apiService driver.APIService, predictionService driver.PredictionService) *GinAdapter {
 	engine := gin.Default()
-	handler := handlers.NewClientHandler(apiService)
+	clientHandler := handlers.NewClientHandler(apiService)
+	predictionHandler := handlers.NewPredictionHandler(predictionService)
 
-	engine.GET("/clients", handler.GetClientNames)
-	engine.POST("/clients/data", handler.GetClientData) // Nuevo endpoint
+	engine.GET("/clients", clientHandler.GetClientNames)
+	engine.POST("/clients/data", clientHandler.GetClientData)
+	engine.POST("/predict", predictionHandler.Predict) // Nuevo endpoint
 
 	return &GinAdapter{
 		engine:     engine,

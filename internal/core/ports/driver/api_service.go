@@ -1,6 +1,6 @@
 package driver
 
 type APIService interface {
-	GetClientNames() ([]string, error)
-	GetClientRawData(clientName string) ([][]string, error)
+    GetClientNames() ([]string, error)
+    GetClientData(clientName string) ([]map[string]interface{}, error) // Agregado
 }

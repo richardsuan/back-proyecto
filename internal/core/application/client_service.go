@@ -21,6 +21,6 @@ func (s *ClientService) GetClientNames() ([]string, error) {
 	return s.excelRepo.GetSheetNames(s.filePath)
 }
 
-func (s *ClientService) GetClientRawData(clientName string) ([][]string, error) {
+func (s *ClientService) GetClientData(clientName string) ([]map[string]interface{}, error) {
 	return s.excelRepo.GetClientData(s.filePath, clientName)
 }
